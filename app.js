@@ -95,6 +95,22 @@ app.patch('/api/v1/tours/:id', (req, res) => {
     })
 })
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+    // with * covert it to number
+    if(req.params.id * 1 > tours.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID'
+        });
+    }
+    // 204 means no content
+    res.status(204).json({
+        status: 'success',
+        // usually we dont send any data back, we send null to show that the resource that we deleted now no longer exists
+        data: null
+    })
+})
+
 const port = 3000;
 app.listen(port, () => {
     console.log(`App running on port ${port}...`)

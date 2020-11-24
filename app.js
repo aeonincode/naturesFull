@@ -2,9 +2,20 @@ const fs = require('fs');
 const express = require('express');
 
 const app = express();
-
 // simple middleware
 app.use(express.json());
+
+app.use((req, res, next) => {
+    console.log('Hello from the middleware 🤘🏻');
+    next();
+});
+
+app.use((req, res, next) => {
+    req.requestTime = new Date().toISOString();
+    next();
+});
+
+
 
 // app.get('/', (req, res) => {
 //     res.status(200).json({message:'Hello from the server side!', app: 'Naturs'})
@@ -17,8 +28,10 @@ app.use(express.json());
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
 const getAllTours = (req, res) => {
+    console.log(req.requestTime);
     res.status(200).json({
         status: 'success',
+        requestedAt: req.requestTime,
         // useful when we sending an array,multiple object 
         results: tours.length,
         data: {

@@ -4,7 +4,7 @@
   "description": "learn express, node and mongo db",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "author": "aeonincode",
   "license": "ISC",

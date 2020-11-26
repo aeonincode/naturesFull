@@ -13,7 +13,17 @@ exports.checkID = (req, res, next, val) => {
         });
     }
     next();
-}
+};
+
+exports.checkBody = (req, res, next) => {
+    if (!req.body.name || !req.body.price) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Missing name or price'
+      });
+    }
+    next();
+  };
 
 // 2) ROUTE HANDLERS
 exports.getAllTours = (req, res) => {
@@ -45,8 +55,8 @@ exports.getTour = (req, res) => {
 
 exports.createTour = (req,res) => {
     //console.log(req.body);
-    exports.newId = tours[tours.length -1].id + 1;
-    exports.newTour = Object.assign({id: newId}, req.body);
+    const newId = tours[tours.length - 1].id + 1;
+    const newTour = Object.assign({ id: newId }, req.body);
 
     tours.push(newTour);
 

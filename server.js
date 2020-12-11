@@ -18,6 +18,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
   })
   //.then(() => console.log('DB connection successful!');)
   .then((con) => {
@@ -44,6 +45,22 @@ const tourSchema = new mongoose.Schema({
 });
 // Create Model from schema
 const Tour = mongoose.model('Tour', tourSchema);
+
+const testTour = new Tour({
+  name: 'The Park Camper',
+  price: 997,
+});
+
+// save it to tour collection in database
+testTour
+  .save()
+  .then((doc) => {
+    console.log(doc);
+  })
+  .catch((err) => {
+    // ctrl+i to open up emoji
+    console.log('ERROR 🔥', err);
+  });
 
 //console.log(app.get('env'));
 //console.log(process.env);

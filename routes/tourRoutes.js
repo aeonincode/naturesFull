@@ -4,7 +4,7 @@ const tourController = require('./../controllers/tourController');
 // create new Router and save this to new variable router
 const router = express.Router();
 
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 // Create a checkBody middleware
 // Check if body contains the name and price property
@@ -12,14 +12,14 @@ router.param('id', tourController.checkID);
 // Add it to the post handler stack
 
 router
-    .route('/')
-    .get(tourController.getAllTours)
-    .post(tourController.checkBody, tourController.createTour);
+  .route('/')
+  .get(tourController.getAllTours)
+  .post(tourController.checkBody, tourController.createTour);
 
 router
-    .route('/:id')
-    .get(tourController.getTour)
-    .patch(tourController.updateTour)
-    .delete(tourController.deleteTour);
+  .route('/:id')
+  .get(tourController.getTour)
+  .patch(tourController.updateTour)
+  .delete(tourController.deleteTour);
 
 module.exports = router;

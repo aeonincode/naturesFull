@@ -4,6 +4,7 @@ const tourController = require('./../controllers/tourController');
 // create new Router and save this to new variable router
 const router = express.Router();
 
+// define parameter middleware in your own application
 // router.param('id', tourController.checkID);
 
 // Create a checkBody middleware
@@ -14,7 +15,7 @@ const router = express.Router();
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .post(tourController.createTour);
 
 router
   .route('/:id')

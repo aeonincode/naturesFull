@@ -12,31 +12,49 @@ const Tour = require('./../models/tourModel');
 // };
 
 // 2) ROUTE HANDLERS
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    // useful when we sending an array,multiple object
-    // results: tours.length,
-    // data: {
-    //   tours,
-    // },
-  });
+exports.getAllTours = async (req, res) => {
+  //console.log(req.requestTime);
+  try {
+    // Get all tours from database
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: 'success',
+      // useful when we sending an array,multiple object
+      results: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
-exports.getTour = (req, res) => {
-  console.log(req.params);
-  const id = req.params.id * 1;
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // Tour.findOne({ _id: req.params.id })
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+  // console.log(req.params);
+  // const id = req.params.id * 1;
 
   //   const tour = tours.find((el) => el.id === id);
-
-  //   res.status(200).json({
-  //     status: 'success',
-  //     data: {
-  //       tour,
-  //     },
-  //   });
 };
 
 exports.createTour = async (req, res) => {

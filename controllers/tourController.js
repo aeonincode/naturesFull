@@ -105,11 +105,21 @@ exports.updateTour = async (req, res) => {
   }
 };
 
-exports.deleteTour = (req, res) => {
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: 'success',
+      // usually we dont send any data back, we send null to show that the resource that we deleted now no longer exists
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+
   // 204 means no content
-  res.status(204).json({
-    status: 'success',
-    // usually we dont send any data back, we send null to show that the resource that we deleted now no longer exists
-    data: null,
-  });
 };

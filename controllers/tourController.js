@@ -15,7 +15,10 @@ const Tour = require('./../models/tourModel');
 exports.getAllTours = async (req, res) => {
   //console.log(req.requestTime);
   try {
+    console.log(req.query);
+
     // BUILD QUERY
+    // 1) Filtering
     // this ... take all fields out of the object and with {} we create new object
     const queryObj = { ...req.query };
 
@@ -27,9 +30,16 @@ exports.getAllTours = async (req, res) => {
 
     //console.log(req.query, queryObj);
 
-    // Get all tours from database
+    // 2) Advanced filtering
+    // first convert object to string
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    console.log(JSON.parse(queryStr));
+
+    const query = Tour.find(JSON.parse(queryStr));
+
     // EXECUTE QUERY
-    const query = Tour.find(queryObj);
+    const tours = await query;
 
     // second way
     // const query = Tour.find()
@@ -38,8 +48,7 @@ exports.getAllTours = async (req, res) => {
     //   .where('difficulty')
     //   .equals('easy');
 
-    const tours = await query;
-
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       // useful when we sending an array,multiple object

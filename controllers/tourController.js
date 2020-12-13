@@ -15,8 +15,30 @@ const Tour = require('./../models/tourModel');
 exports.getAllTours = async (req, res) => {
   //console.log(req.requestTime);
   try {
+    // BUILD QUERY
+    // this ... take all fields out of the object and with {} we create new object
+    const queryObj = { ...req.query };
+
+    // create array of all fields that we want to exclude
+    const excludeFields = ['page', 'sort', 'limit', 'fields'];
+
+    // remove all of these fields from our query object
+    excludeFields.forEach((el) => delete queryObj[el]);
+
+    //console.log(req.query, queryObj);
+
     // Get all tours from database
-    const tours = await Tour.find();
+    // EXECUTE QUERY
+    const query = Tour.find(queryObj);
+
+    // second way
+    // const query = Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    const tours = await query;
 
     res.status(200).json({
       status: 'success',

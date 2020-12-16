@@ -18,7 +18,7 @@ exports.getAllTours = async (req, res) => {
     console.log(req.query);
 
     // BUILD QUERY
-    // 1) Filtering
+    // 1A) Filtering
     // this ... take all fields out of the object and with {} we create new object
     const queryObj = { ...req.query };
 
@@ -30,13 +30,28 @@ exports.getAllTours = async (req, res) => {
 
     //console.log(req.query, queryObj);
 
-    // 2) Advanced filtering
+    // 1B) Advanced filtering
     // first convert object to string
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    console.log(JSON.parse(queryStr));
 
-    const query = Tour.find(JSON.parse(queryStr));
+    // \b before and after because we only want to match these exact words without any other string around it
+    // /g g flag means that is happen multiple times so if we have 2 or 3 operators or even all of them
+    // then it will replace all of them and without /g it would be only replace the first occurrence
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    //console.log(JSON.parse(queryStr));
+
+    let query = Tour.find(JSON.parse(queryStr));
+
+    // 2) Sorting
+    // sort result base on the value
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      //console.log(sortBy);
+      // chain someting to the query
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
 
     // EXECUTE QUERY
     const tours = await query;

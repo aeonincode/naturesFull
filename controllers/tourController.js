@@ -50,7 +50,19 @@ exports.getAllTours = async (req, res) => {
       // chain someting to the query
       query = query.sort(sortBy);
     } else {
+      // descending order, newest ones appear first
       query = query.sort('-createdAt');
+    }
+
+    // 3) Field Limiting
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      // The operation of selecting only certain field names is called projecting
+      query = query.select(fields);
+    } else {
+      // default
+      // excluding only this field
+      query = query.select('-__v');
     }
 
     // EXECUTE QUERY

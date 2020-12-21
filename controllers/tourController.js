@@ -198,6 +198,7 @@ exports.deleteTour = async (req, res) => {
   try {
     await Tour.findByIdAndDelete(req.params.id);
 
+    // 204 means no content
     res.status(204).json({
       status: 'success',
       // usually we dont send any data back, we send null to show that the resource that we deleted now no longer exists
@@ -209,6 +210,48 @@ exports.deleteTour = async (req, res) => {
       message: err,
     });
   }
+};
 
-  // 204 means no content
+// Aggregation pipeline
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      // steps
+      {
+        // stage
+        $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          // _id: '$ratingsAverage',
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRating: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 },
+      },
+      // {
+      //   // selelect all documents not easy, excluding easy ones
+      //   $match: { _id: { $ne: 'EASY' } },
+      // },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };

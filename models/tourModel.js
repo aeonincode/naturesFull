@@ -62,6 +62,10 @@ const tourSchema = new mongoose.Schema(
     },
     // Array of dates, when tours starts
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -82,14 +86,33 @@ tourSchema.pre('save', function (next) {
 });
 
 // Multiple pre midllewares or hooks
-tourSchema.pre('save', function (next) {
-  console.log('Will save document...');
+// tourSchema.pre('save', function (next) {
+//   console.log('Will save document...');
+//   next();
+// });
+
+// POST MIDDLEWARE
+// tourSchema.post('save', function (doc, next) {
+//   console.log(doc);
+//   next();
+// });
+
+// QUERY MIDDLEWARE
+tourSchema.pre(/^find/, function (next) {
+  // /^find/ it means all strings start with find
+  // this here is query object, we can chain all the methods we have for queries
+  // select all documents where secretTour is not true
+  //tourSchema.pre('find', function (next) {
+  this.find({ secretTour: { $ne: true } });
+
+  this.start = Date.now();
   next();
 });
 
-// POST MIDDLEWARE
-tourSchema.post('save', function (doc, next) {
-  console.log(doc);
+// Post middleware for find
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+  console.log(docs);
   next();
 });
 

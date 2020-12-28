@@ -20,11 +20,11 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
-  //.then(() => console.log('DB connection successful!');)
-  .then((con) => {
-    //console.log(con.connection);
-    console.log('DB connection successful!');
-  });
+  .then(() => console.log('DB connection successful!'));
+// .then((con) => {
+//   //console.log(con.connection);
+//   console.log('DB connection successful!');
+// });
 
 // const testTour = new Tour({
 //   name: 'The Park Camper',
@@ -47,6 +47,14 @@ mongoose
 
 // START SERVER
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log(err.name, err.message);
+  console.log('UNHANDLER REJECTION! 🔥 Shutting down...');
+  server.close(() => {
+    process.exit(1);
+  });
 });

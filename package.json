@@ -11,6 +11,7 @@
   "author": "aeonincode",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "eslint": "^7.14.0",
     "eslint-config-airbnb": "^18.2.1",

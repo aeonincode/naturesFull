@@ -20,6 +20,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
+    // never show up encrypted password in any output
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -47,6 +49,14 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+// instance method
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 // Create Model out of the Schema
 // User, model variables always with capital letter

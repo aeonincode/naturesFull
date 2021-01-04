@@ -11,7 +11,7 @@ router.post('/login', authController.login);
 // only receive email address
 router.post('/forgotPassword', authController.forgotPassword);
 // receive token as well as new password
-router.post('/resetPassword', authController.resetPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
 
 router
   .route('/')

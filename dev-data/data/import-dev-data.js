@@ -28,9 +28,10 @@ mongoose
 
 // READ JSON FILE
 // convert json to javascript object using JSON.parse
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
-);
+// const tours = JSON.parse(
+//   fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+// );
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
 // function that IMPORT DATA INTO DB
 const importData = async () => {

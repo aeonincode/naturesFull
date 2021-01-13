@@ -2,6 +2,7 @@ const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -90,20 +91,21 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndDelete(req.params.id);
+exports.deleteTour = factory.deleteOne(Tour);
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findByIdAndDelete(req.params.id);
 
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }
+//   if (!tour) {
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
 
-  // 204 means no content
-  res.status(204).json({
-    status: 'success',
-    // usually we dont send any data back, we send null to show that the resource that we deleted now no longer exists
-    data: null,
-  });
-});
+//   // 204 means no content
+//   res.status(204).json({
+//     status: 'success',
+//     // usually we dont send any data back, we send null to show that the resource that we deleted now no longer exists
+//     data: null,
+//   });
+// });
 
 // Aggregation pipeline
 exports.getTourStats = catchAsync(async (req, res, next) => {

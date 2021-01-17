@@ -129,6 +129,12 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// 1 means we're sorting the price index Ascending Order
+// tourSchema.index({ price: 1 });
+// -1 stands for descending order
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 // Virtual properties
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;

@@ -135,6 +135,7 @@ const tourSchema = new mongoose.Schema(
 // -1 stands for descending order
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 // Virtual properties
 tourSchema.virtual('durationWeeks').get(function () {

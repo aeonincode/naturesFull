@@ -86,7 +86,12 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+    // if there was no token in authorization header, then take a look at cookies
+  } else if (req.cookies.jwt) {
+    // if this exists, token should be exactly that
+    token = req.cookies.jwt;
   }
+
   //console.log(token);
 
   // check if token really excist
